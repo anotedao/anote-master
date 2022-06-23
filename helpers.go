@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"crypto/sha256"
 	"log"
 	"net/http"
 	"time"
@@ -78,4 +79,10 @@ func dataTransaction(key string, valueStr *string, valueInt *int64) error {
 	}
 
 	return nil
+}
+
+// NewSHA256 ...
+func NewSHA256(data []byte) []byte {
+	hash := sha256.Sum256(data)
+	return hash[:]
 }
