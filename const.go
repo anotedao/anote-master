@@ -15,4 +15,7 @@ const (
 
 	// Port represents a port the app will listen on
 	Port = 5000
+
+	// MonitorTick interval in seconds
+	MonitorTick = 10
 )
