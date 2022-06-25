@@ -12,4 +12,7 @@ const (
 
 	// Fee is regular fee amount
 	Fee = 100000
+
+	// Port represents a port the app will listen on
+	Port = 5000
 )

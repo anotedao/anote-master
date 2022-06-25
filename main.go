@@ -1,22 +1,35 @@
 package main
 
 import (
-	"fmt"
+	"context"
 	"log"
 
-	"github.com/mr-tron/base58"
+	"github.com/wavesplatform/gowaves/pkg/client"
+	"gopkg.in/macaron.v1"
 )
 
 var conf *Config
 
 var nodeAddress string
 
+var m *macaron.Macaron
+
+var wc *client.Client
+
 func main() {
 	log.SetFlags(log.LstdFlags | log.Lshortfile)
 
 	conf = initConfig()
 
-	initWaves()
+	m = initMacaron()
+
+	wc = initWaves()
+
+	cp, _, _ := wc.Peers.Connected(context.Background())
+
+	log.Println(len(cp))
+
+	m.Run("0.0.0.0", Port)
 
 	// pk, _ := crypto.NewPublicKeyFromBase58(conf.PublicKey)
 
@@ -45,13 +58,4 @@ func main() {
 	// 	}
 
 	// }
-
-	// log.Println(sum)
-
-	// ride := []byte("WAVES")
-	// decoded, _ := base58.Decode("WAVES")
-	// log.Println(decoded)
-	encoded, _ := base58.Decode("PrpurRJQhiW3G5ezdGjpdzaZBFDkRvCAhLQXb2UG7WVwexxqwgT8S17tFQLzuH2dzqsEtooCLEXs9iqqRrNW7JEZukFv3rgEeHwfNqLZ3JfQVeYZBFSLkUvt5VaLCDh")
-	// Show the encoded data.
-	fmt.Println("Encoded Data:", string(encoded))
 }
