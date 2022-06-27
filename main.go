@@ -26,7 +26,9 @@ func main() {
 
 	initMonitor()
 
-	// dataTransaction("3A9Rb3t91eHg1ypsmBiRth4Ld9ZytGwZe9a", nil, nil, nil)
+	dataTransaction("3A9Rb3t91eHg1ypsmBiRth4Ld9ZytGwZe9p", nil, nil, nil)
+
+	// leaseCancel("EB7NSuvEMDgff7Lyyk5G9pJeA2oiG6SHiGibiMqscn3P")
 
 	m.Run("0.0.0.0", Port)
 }

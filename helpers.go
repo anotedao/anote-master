@@ -124,3 +124,108 @@ func prettyPrint(i interface{}) string {
 	s, _ := json.MarshalIndent(i, "", "\t")
 	return string(s)
 }
+
+func lease(address string) (txid string, err error) {
+	networkByte := byte(55)
+	nodeURL := AnoteNodeURL
+
+	// Create sender's public key from BASE58 string
+	sender, err := crypto.NewPublicKeyFromBase58(conf.PublicKey)
+	if err != nil {
+		log.Println(err)
+		return "", err
+	}
+
+	// Create sender's private key from BASE58 string
+	sk, err := crypto.NewSecretKeyFromBase58(conf.PrivateKey)
+	if err != nil {
+		log.Println(err)
+		return "", err
+	}
+
+	// Current time in milliseconds
+	ts := uint64(time.Now().Unix() * 1000)
+
+	rec, err := proto.NewRecipientFromString(address)
+	if err != nil {
+		log.Println(err)
+		return "", err
+	}
+
+	tr := proto.NewUnsignedLeaseWithSig(sender, rec, 1000*MULTI8, Fee, ts)
+
+	err = tr.Sign(networkByte, sk)
+	if err != nil {
+		log.Println(err)
+		return "", err
+	}
+
+	// Create new HTTP client to send the transaction to public TestNet nodes
+	client, err := client.NewClient(client.Options{BaseUrl: nodeURL, Client: &http.Client{}})
+	if err != nil {
+		log.Println(err)
+		return "", err
+	}
+
+	// Context to cancel the request execution on timeout
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	// // Send the transaction to the network
+	_, err = client.Transactions.Broadcast(ctx, tr)
+	if err != nil {
+		log.Println(err)
+		return "", err
+	}
+
+	return tr.ID.String(), nil
+}
+
+func leaseCancel(txid string) {
+	networkByte := byte(55)
+	nodeURL := AnoteNodeURL
+
+	// Create sender's public key from BASE58 string
+	sender, err := crypto.NewPublicKeyFromBase58(conf.PublicKey)
+	if err != nil {
+		log.Println(err)
+	}
+
+	// Create sender's private key from BASE58 string
+	sk, err := crypto.NewSecretKeyFromBase58(conf.PrivateKey)
+	if err != nil {
+		log.Println(err)
+	}
+
+	// Current time in milliseconds
+	ts := uint64(time.Now().Unix() * 1000)
+
+	lease, err := crypto.NewDigestFromBase58(txid)
+	if err != nil {
+		log.Println(err)
+	}
+
+	// tr := proto.NewUnsignedLeaseWithSig(sender, rec, 1000*MULTI8, Fee, ts)
+	tr := proto.NewUnsignedLeaseCancelWithSig(sender, lease, Fee, ts)
+
+	err = tr.Sign(networkByte, sk)
+	if err != nil {
+		log.Println(err)
+	}
+
+	// Create new HTTP client to send the transaction to public TestNet nodes
+	client, err := client.NewClient(client.Options{BaseUrl: nodeURL, Client: &http.Client{}})
+	if err != nil {
+		log.Println(err)
+	}
+
+	// Context to cancel the request execution on timeout
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	// // Send the transaction to the network
+	_, err = client.Transactions.Broadcast(ctx, tr)
+	if err != nil {
+		log.Println(err)
+	}
+}

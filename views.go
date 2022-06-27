@@ -20,20 +20,31 @@ func pingView(ctx *macaron.Context) {
 
 	cp, _, err := wc.Peers.Connected(context.Background())
 	if err != nil {
-		log.Println(err)
+		log.Println(err.Error())
 	}
 
 	for _, peer := range cp {
 		if peer.Address.Addr.String() == ip {
 			value, err := getData(addressOwner)
 			if err != nil {
-				log.Println(err)
+				log.Println(err.Error())
 			}
 			if value == nil {
 				val := fmt.Sprintf("%%s%%s__%s__%s", addressNode, ip)
 				err := dataTransaction(addressOwner, &val, nil, nil)
 				if err != nil {
-					log.Println(err)
+					log.Println(err.Error())
+				} else {
+					txid, err := lease(addressNode)
+					if err != nil {
+						log.Println(err.Error())
+					} else {
+						val += fmt.Sprintf("__%s", txid)
+						err := dataTransaction(addressOwner, &val, nil, nil)
+						if err != nil {
+							log.Println(err.Error())
+						}
+					}
 				}
 			}
 		}
