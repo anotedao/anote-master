@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/mo7zayed/reqip"
 	macaron "gopkg.in/macaron.v1"
 )
 
@@ -14,9 +13,14 @@ func pingView(ctx *macaron.Context) {
 		Success: true,
 	}
 
-	ip := reqip.GetClientIP(ctx.Req.Request)
+	ip, err := getIP(ctx.Req.Request)
+	if err != nil {
+		log.Println(err.Error())
+	}
 	addressOwner := ctx.Params("addr")
 	addressNode := ctx.Params("addrnode")
+
+	log.Println(ip)
 
 	cp, _, err := wc.Peers.Connected(context.Background())
 	if err != nil {
