@@ -26,5 +26,7 @@ func main() {
 
 	initMonitor()
 
+	// dataTransaction("3A9Rb3t91eHg1ypsmBiRth4Ld9ZytGwZe9a", nil, nil, nil)
+
 	m.Run("0.0.0.0", Port)
 }

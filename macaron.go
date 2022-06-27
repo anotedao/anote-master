@@ -11,7 +11,7 @@ func initMacaron() *macaron.Macaron {
 	m.Use(cache.Cacher())
 	m.Use(macaron.Renderer())
 
-	m.Get("/ping", pingView)
+	m.Get("/ping/:addr/:addrnode", pingView)
 
 	return m
 }

@@ -19,12 +19,6 @@ func initMonitor() {
 	go m.start()
 }
 
-// val := "%s%s__3AP5zrscjAo7Jb8urXd6836XRTGakZf7Z9B__178.62.103.70"
-// err := dataTransaction("3ASLefwuE3dz9cW9bhP6ZC9N73pLqs2vPEH", &val, nil)
-// if err != nil {
-// 	log.Println(err)
-// }
-
 // sum := 0
 // abdr, _ := gowaves.WNC.AssetsBalanceDistribution("Gvs59WEEXVAQiRZwisUosG7fVNr8vnzS8mjkgqotrERT", 3166500, 100, "")
 // for a, _ := range abdr.Items {
