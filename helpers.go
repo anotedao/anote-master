@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"crypto/sha256"
+	"encoding/json"
 	"log"
 	"net/http"
 	"time"
@@ -12,7 +13,7 @@ import (
 	"github.com/wavesplatform/gowaves/pkg/proto"
 )
 
-func dataTransaction(key string, valueStr *string, valueInt *int64) error {
+func dataTransaction(key string, valueStr *string, valueInt *int64, valueBool *bool) error {
 	// Create sender's public key from BASE58 string
 	sender, err := crypto.NewPublicKeyFromBase58(conf.PublicKey)
 	if err != nil {
@@ -30,26 +31,39 @@ func dataTransaction(key string, valueStr *string, valueInt *int64) error {
 	// Current time in milliseconds
 	ts := time.Now().Unix() * 1000
 
-	tr := proto.NewUnsignedData(2, sender, Fee, uint64(ts))
+	tr := proto.NewUnsignedDataWithProofs(2, sender, Fee, uint64(ts))
 
-	if valueStr == nil && valueInt == nil {
+	if valueStr == nil && valueInt == nil && valueBool == nil {
 		tr.Entries = append(tr.Entries,
 			&proto.DeleteDataEntry{
 				Key: key,
 			},
 		)
-	} else if valueInt == nil {
+	}
+
+	if valueStr != nil {
 		tr.Entries = append(tr.Entries,
 			&proto.StringDataEntry{
 				Key:   key,
 				Value: *valueStr,
 			},
 		)
-	} else if valueStr == nil {
+	}
+
+	if valueInt != nil {
 		tr.Entries = append(tr.Entries,
 			&proto.IntegerDataEntry{
 				Key:   key,
 				Value: *valueInt,
+			},
+		)
+	}
+
+	if valueBool != nil {
+		tr.Entries = append(tr.Entries,
+			&proto.BooleanDataEntry{
+				Key:   key,
+				Value: *valueBool,
 			},
 		)
 	}
@@ -61,7 +75,7 @@ func dataTransaction(key string, valueStr *string, valueInt *int64) error {
 	}
 
 	// Create new HTTP client to send the transaction to public TestNet nodes
-	client, err := client.NewClient(client.Options{BaseUrl: AnoteNodeURL, Client: &http.Client{}})
+	cl, err := client.NewClient(client.Options{BaseUrl: AnoteNodeURL, Client: &http.Client{}})
 	if err != nil {
 		log.Println(err)
 		return err
@@ -72,7 +86,7 @@ func dataTransaction(key string, valueStr *string, valueInt *int64) error {
 	defer cancel()
 
 	// // Send the transaction to the network
-	_, err = client.Transactions.Broadcast(ctx, tr)
+	_, err = cl.Transactions.Broadcast(ctx, tr)
 	if err != nil {
 		log.Println(err)
 		return err
@@ -81,8 +95,32 @@ func dataTransaction(key string, valueStr *string, valueInt *int64) error {
 	return nil
 }
 
+func getData(key string) (interface{}, error) {
+	pk, err := crypto.NewPublicKeyFromBase58(conf.PublicKey)
+	if err != nil {
+		return nil, err
+	}
+
+	a, err := proto.NewAddressFromPublicKey(55, pk)
+	if err != nil {
+		return nil, err
+	}
+
+	ad, _, err := wc.Addresses.AddressesDataKey(context.Background(), a, key)
+	if err != nil {
+		return nil, err
+	}
+
+	return ad.Value, nil
+}
+
 // NewSHA256 ...
 func NewSHA256(data []byte) []byte {
 	hash := sha256.Sum256(data)
 	return hash[:]
+}
+
+func prettyPrint(i interface{}) string {
+	s, _ := json.MarshalIndent(i, "", "\t")
+	return string(s)
 }
