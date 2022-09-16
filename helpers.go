@@ -333,3 +333,33 @@ func sendAsset(amount uint64, assetId string, recipient string) error {
 
 	return nil
 }
+
+func waitForScript(address string) {
+	cl, err := client.NewClient(client.Options{BaseUrl: AnoteNodeURL, Client: &http.Client{}})
+	if err != nil {
+		log.Println(err)
+		return
+	}
+
+	a, err := proto.NewAddressFromString(address)
+	if err != nil {
+		log.Println(err.Error())
+		return
+	}
+
+	script := ""
+
+	for len(script) == 0 {
+		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+		defer cancel()
+
+		asi, _, err := cl.Addresses.ScriptInfo(ctx, a)
+		if err != nil {
+			log.Println(err.Error())
+			return
+		}
+		script = asi.Script
+
+		time.Sleep(time.Second * 2)
+	}
+}
