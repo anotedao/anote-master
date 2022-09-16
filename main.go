@@ -28,7 +28,7 @@ func main() {
 
 	// dataTransaction("3ACyYVfFcyco4RS8WLbyRSGPHPeCCiUuSqP", nil, nil, nil)
 
-	// leaseCancel("CchGKRF61nz2Ct7b2MK299u6XEwJiG6urNzepqcLTcQC")
+	leaseCancel("EcT4eQemgmA1NVqZk78CoU7ysELa2ekw4r6ixAT8WkWW")
 
 	m.Run("0.0.0.0", Port)
 }

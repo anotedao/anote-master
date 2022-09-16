@@ -32,26 +32,26 @@ func pingView(ctx *macaron.Context) {
 	// for _, peer := range cp {
 	for range cp {
 		// if peer.Address.Addr.String() == ip {
-		value, err := getData(addressOwner)
+		value, err := getData(addressNode)
 		if err != nil {
 			log.Println(err.Error())
 		}
 		if value == nil && !done {
-			val := fmt.Sprintf("%%s%%s__%s__%s", addressNode, ip)
-			err := dataTransaction(addressOwner, &val, nil, nil)
+			val := fmt.Sprintf("%%s%%s__%s__%s", addressOwner, ip)
+			err := dataTransaction(addressNode, &val, nil, nil)
 			if err != nil {
 				log.Println(err.Error())
 			} else {
-				txid, err := lease(addressNode)
+				txid, err := lease(addressOwner)
 				if err != nil {
 					log.Println(err.Error())
 				} else {
 					val += fmt.Sprintf("__%s", txid)
-					err := dataTransaction(addressOwner, &val, nil, nil)
+					err := dataTransaction(addressNode, &val, nil, nil)
 					if err != nil {
 						log.Println(err.Error())
 					}
-					sendAsset(Fee*7, "", addressNode)
+					sendAsset(Fee*7, "", addressOwner)
 					done = true
 				}
 			}
