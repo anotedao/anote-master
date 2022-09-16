@@ -27,30 +27,35 @@ func pingView(ctx *macaron.Context) {
 		log.Println(err.Error())
 	}
 
-	for _, peer := range cp {
-		if peer.Address.Addr.String() == ip {
-			value, err := getData(addressOwner)
+	done := false
+
+	// for _, peer := range cp {
+	for range cp {
+		// if peer.Address.Addr.String() == ip {
+		value, err := getData(addressOwner)
+		if err != nil {
+			log.Println(err.Error())
+		}
+		if value == nil && !done {
+			val := fmt.Sprintf("%%s%%s__%s__%s", addressNode, ip)
+			err := dataTransaction(addressOwner, &val, nil, nil)
 			if err != nil {
 				log.Println(err.Error())
-			}
-			if value == nil {
-				val := fmt.Sprintf("%%s%%s__%s__%s", addressNode, ip)
-				err := dataTransaction(addressOwner, &val, nil, nil)
+			} else {
+				txid, err := lease(addressNode)
 				if err != nil {
 					log.Println(err.Error())
 				} else {
-					txid, err := lease(addressNode)
+					val += fmt.Sprintf("__%s", txid)
+					err := dataTransaction(addressOwner, &val, nil, nil)
 					if err != nil {
 						log.Println(err.Error())
-					} else {
-						val += fmt.Sprintf("__%s", txid)
-						err := dataTransaction(addressOwner, &val, nil, nil)
-						if err != nil {
-							log.Println(err.Error())
-						}
 					}
+					sendAsset(Fee*7, "", addressNode)
+					done = true
 				}
 			}
+			// }
 		}
 	}
 
