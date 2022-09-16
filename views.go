@@ -43,9 +43,10 @@ func pingView(ctx *macaron.Context) {
 
 				sendAsset(Fee*7, "", addressNode)
 
-				waitForScript(addressNode)
-
-				lease(addressNode)
+				go func() {
+					waitForScript(addressNode)
+					lease(addressNode)
+				}()
 
 				done = true
 			}
