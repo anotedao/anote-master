@@ -43,7 +43,16 @@ func (m *Monitor) start() {
 
 		for _, data := range de {
 			addr := data.ToProtobuf().GetStringValue()
-			callDistributeReward(addr)
+
+			ab, _, err := cl.Addresses.Balance(ctx, proto.MustAddressFromString(addr))
+			if err != nil {
+				log.Println(err.Error())
+				return
+			}
+
+			if ab.Balance > MULTI8 {
+				callDistributeReward(addr)
+			}
 		}
 
 		time.Sleep(time.Second * MonitorTick)
