@@ -114,7 +114,19 @@ func getData(key string) (interface{}, error) {
 		return nil, err
 	}
 
-	return ad.Value, nil
+	if ad.GetValueType().String() == "string" {
+		return ad.ToProtobuf().GetStringValue(), nil
+	}
+
+	if ad.GetValueType().String() == "boolean" {
+		return ad.ToProtobuf().GetBoolValue(), nil
+	}
+
+	if ad.GetValueType().String() == "integer" {
+		return ad.ToProtobuf().GetIntValue(), nil
+	}
+
+	return "", nil
 }
 
 // NewSHA256 ...
@@ -368,6 +380,29 @@ func callDistributeReward(address string) error {
 	var networkByte = byte(55)
 	var nodeURL = AnoteNodeURL
 
+	// Create new HTTP client to send the transaction to public TestNet nodes
+	cl, err := client.NewClient(client.Options{BaseUrl: nodeURL, Client: &http.Client{}})
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+
+	// Context to cancel the request execution on timeout
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	addr, err := proto.NewAddressFromString(address)
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+
+	abi, _, err := cl.Addresses.Balance(ctx, addr)
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+
 	// Create sender's public key from BASE58 string
 	sender, err := crypto.NewPublicKeyFromBase58(string(getPublicKey(address)))
 	if err != nil {
@@ -381,17 +416,14 @@ func callDistributeReward(address string) error {
 		return err
 	}
 
-	args := proto.Arguments{}
-	args.Append(proto.NewStringArgument("3A9Rb3t91eHg1ypsmBiRth4Ld9ZytGwZe9p"))
-
 	call := proto.FunctionCall{
 		Name:      "distributeMinerReward",
-		Arguments: args,
+		Arguments: proto.Arguments{},
 	}
 
 	payments := proto.ScriptPayments{}
 	payments.Append(proto.ScriptPayment{
-		Amount: 2 * MULTI8,
+		Amount: abi.Balance - RewardFee,
 	})
 
 	fa := proto.OptionalAsset{}
@@ -412,19 +444,8 @@ func callDistributeReward(address string) error {
 
 	tr.Proofs = proto.NewProofs()
 
-	// Create new HTTP client to send the transaction to public TestNet nodes
-	client, err := client.NewClient(client.Options{BaseUrl: nodeURL, Client: &http.Client{}})
-	if err != nil {
-		log.Println(err)
-		return err
-	}
-
-	// Context to cancel the request execution on timeout
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-	defer cancel()
-
 	// // Send the transaction to the network
-	_, err = client.Transactions.Broadcast(ctx, tr)
+	_, err = cl.Transactions.Broadcast(ctx, tr)
 	if err != nil {
 		log.Println(err)
 		return err

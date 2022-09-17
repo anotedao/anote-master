@@ -8,7 +8,7 @@ import (
 
 func initWaves() *client.Client {
 	opts := client.Options{
-		BaseUrl: "http://localhost:6869",
+		BaseUrl: AnoteNodeURL,
 		ApiKey:  " ",
 	}
 	wc, err := client.NewClient(opts)

@@ -2,8 +2,6 @@ module anote-master
 
 go 1.18
 
-replace github.com/wavesplatform/gowaves => github.com/cryptopragmatic/gowaves v0.9.1-0.20220626201700-24d799db7c8e
-
 require (
 	github.com/go-macaron/cache v0.0.0-20200329073519-53bb48172687
 	github.com/wavesplatform/gowaves v0.10.1
