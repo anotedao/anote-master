@@ -6,8 +6,7 @@ replace github.com/wavesplatform/gowaves => github.com/cryptopragmatic/gowaves v
 
 require (
 	github.com/go-macaron/cache v0.0.0-20200329073519-53bb48172687
-	github.com/mo7zayed/reqip v0.0.0-20200520084230-ae375eb9322b
-	github.com/wavesplatform/gowaves v0.9.0
+	github.com/wavesplatform/gowaves v0.10.1
 	gopkg.in/macaron.v1 v1.4.0
 )
 
@@ -25,13 +24,13 @@ require (
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
 	go.uber.org/atomic v1.9.0 // indirect
 	go.uber.org/multierr v1.6.0 // indirect
-	go.uber.org/zap v1.21.0 // indirect
+	go.uber.org/zap v1.22.0 // indirect
 	golang.org/x/crypto v0.0.0-20211108221036-ceb1ce70b4fa // indirect
-	golang.org/x/net v0.0.0-20210525063256-abc453219eb5 // indirect
-	golang.org/x/sys v0.0.0-20220114195835-da31bd327af9 // indirect
+	golang.org/x/net v0.0.0-20220225172249-27dd8689420f // indirect
+	golang.org/x/sys v0.0.0-20220520151302-bc2c85ada10a // indirect
 	golang.org/x/text v0.3.7 // indirect
 	google.golang.org/genproto v0.0.0-20210226172003-ab064af71705 // indirect
-	google.golang.org/grpc v1.47.0 // indirect
-	google.golang.org/protobuf v1.28.0 // indirect
+	google.golang.org/grpc v1.48.0 // indirect
+	google.golang.org/protobuf v1.28.1 // indirect
 	gopkg.in/ini.v1 v1.46.0 // indirect
 )

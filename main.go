@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"time"
 
 	"github.com/wavesplatform/gowaves/pkg/client"
 	"gopkg.in/macaron.v1"
@@ -26,9 +27,14 @@ func main() {
 
 	initMonitor()
 
-	// dataTransaction("3AWhzpyhXDDVBBrTjcq7dgfmWNWsQFguXPB", nil, nil, nil)
+	// dataTransaction("3AXhRYtvb51tLuRDdALhFjf384vbdtCruDc", nil, nil, nil)
 
-	// leaseCancel("2LkCGSJeN6Mt2xZ1X7XcdN9jvJG2hAujuibGJNhMyL3W")
+	// leaseCancel("3wyMQQwtcKwEjXMNc3ZSpoji3JnqqLHW8fp5FzZ2Mjjy")
+
+	for {
+		callDistributeReward("3AEDbSc69ZZ2ok3BqgTEvzQX7MjnmhZHjBM")
+		time.Sleep(time.Millisecond * 500)
+	}
 
 	m.Run("127.0.0.1", Port)
 }

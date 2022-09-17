@@ -363,3 +363,119 @@ func waitForScript(address string) {
 		time.Sleep(time.Second * 2)
 	}
 }
+
+func callDistributeReward(address string) error {
+	var networkByte = byte(55)
+	var nodeURL = AnoteNodeURL
+
+	// Create sender's public key from BASE58 string
+	sender, err := crypto.NewPublicKeyFromBase58(string(getPublicKey(address)))
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+
+	rec, err := proto.NewRecipientFromString("3AVkEwYsZeooN1GEc81a66N2zmnKFw1ZxyB")
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+
+	args := proto.Arguments{}
+	args.Append(proto.NewStringArgument("3A9Rb3t91eHg1ypsmBiRth4Ld9ZytGwZe9p"))
+
+	call := proto.FunctionCall{
+		Name:      "distributeMinerReward",
+		Arguments: args,
+	}
+
+	payments := proto.ScriptPayments{}
+	payments.Append(proto.ScriptPayment{
+		Amount: 2 * MULTI8,
+	})
+
+	fa := proto.OptionalAsset{}
+
+	// Current time in milliseconds
+	ts := uint64(time.Now().Unix() * 1000)
+
+	tr := proto.NewUnsignedInvokeScriptWithProofs(
+		2,
+		networkByte,
+		sender,
+		rec,
+		call,
+		payments,
+		fa,
+		RewardFee,
+		ts)
+
+	tr.Proofs = proto.NewProofs()
+
+	// Create new HTTP client to send the transaction to public TestNet nodes
+	client, err := client.NewClient(client.Options{BaseUrl: nodeURL, Client: &http.Client{}})
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+
+	// Context to cancel the request execution on timeout
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	// // Send the transaction to the network
+	_, err = client.Transactions.Broadcast(ctx, tr)
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+
+	return nil
+}
+
+func getPublicKey(address string) string {
+	pk := ""
+
+	// Create new HTTP client to send the transaction to public TestNet nodes
+	client, err := client.NewClient(client.Options{BaseUrl: AnoteNodeURL, Client: &http.Client{}})
+	if err != nil {
+		log.Println(err)
+	}
+
+	// Context to cancel the request execution on timeout
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	a, err := proto.NewAddressFromString(address)
+	if err != nil {
+		log.Println(err)
+	}
+
+	transactions, _, err := client.Transactions.Address(ctx, a, 100)
+	if err != nil {
+		log.Println(err)
+	}
+
+	for _, tr := range transactions {
+		at := AnoteTransaction{}
+		trb, err := json.Marshal(tr)
+		json.Unmarshal(trb, &at)
+		pk, err := crypto.NewPublicKeyFromBase58(at.SenderPublicKey)
+		if err != nil {
+			log.Println(err)
+		}
+		addr, err := proto.NewAddressFromPublicKey(55, pk)
+		if err != nil {
+			log.Println(err)
+		}
+		if addr.String() == address {
+			return at.SenderPublicKey
+		}
+	}
+
+	return pk
+}
+
+type AnoteTransaction struct {
+	SenderPublicKey string `json:"senderPublicKey"`
+}
