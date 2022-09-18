@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"log"
 
 	macaron "gopkg.in/macaron.v1"
@@ -34,8 +33,8 @@ func pingView(ctx *macaron.Context) {
 			}
 
 			if value == nil && valueIp == nil && !done {
-				val := fmt.Sprintf("%%s__%s", addressOwner)
-				valIp := fmt.Sprintf("%%s__%s", addressNode)
+				val := addressOwner
+				valIp := addressNode
 
 				dataTransaction(addressNode, &val, nil, nil)
 
@@ -49,6 +48,8 @@ func pingView(ctx *macaron.Context) {
 				}()
 
 				done = true
+			} else if !done {
+				log.Println("Ping not done: ", value, valueIp)
 			}
 		}
 	}

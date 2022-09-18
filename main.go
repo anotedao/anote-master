@@ -26,10 +26,10 @@ func main() {
 
 	initMonitor()
 
-	// node := "3A9Rb3t91eHg1ypsmBiRth4Ld9ZytGwZe9p"
-	// dataTransaction("3AEDbSc69ZZ2ok3BqgTEvzQX7MjnmhZHjBM", &node, nil, nil)
+	// node := "3AKCefhcrijSwwWM671ahhMrPVrE7Je3j4s"
+	// dataTransaction("3A9tArcHUwAuuvBTPhwKhMsmY6LFPpr7Y8P", nil, nil, nil)
 
-	// leaseCancel("3wyMQQwtcKwEjXMNc3ZSpoji3JnqqLHW8fp5FzZ2Mjjy")
+	// leaseCancel("G3Uqy4ZF5UWaBNmJxzNK4ptLNM1rjekT39JnQ5FDkcC4")
 
 	// for {
 	// 	callDistributeReward("3AEDbSc69ZZ2ok3BqgTEvzQX7MjnmhZHjBM")
