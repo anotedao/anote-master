@@ -27,20 +27,9 @@ func main() {
 	initMonitor()
 
 	// node := "3AKCefhcrijSwwWM671ahhMrPVrE7Je3j4s"
-	// dataTransaction("3A9tArcHUwAuuvBTPhwKhMsmY6LFPpr7Y8P", nil, nil, nil)
-
-	// leaseCancel("G3Uqy4ZF5UWaBNmJxzNK4ptLNM1rjekT39JnQ5FDkcC4")
-
-	// for {
-	// 	callDistributeReward("3AEDbSc69ZZ2ok3BqgTEvzQX7MjnmhZHjBM")
-	// 	time.Sleep(time.Millisecond * 500)
-	// }
-
-	// callDistributeReward("3AEDbSc69ZZ2ok3BqgTEvzQX7MjnmhZHjBM")
-
-	// d, _ := getData("3AAA8MEsF3R9Qaa9ZKTHpdsLvXeDNZua2xk")
-
-	// log.Println(d)
+	// dataTransaction("188.166.93.92", nil, nil, nil)
+	// dataTransaction("3AQMExacaLKDXdWP8niVeyAe7Dw2vJdmNPy", nil, nil, nil)
+	// leaseCancel("9Gz3mK5WBW38gFLV4ysBC121yoTFw1DckNMU25XYCfHg")
 
 	m.Run("127.0.0.1", Port)
 }
