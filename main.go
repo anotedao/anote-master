@@ -27,9 +27,9 @@ func main() {
 	initMonitor()
 
 	// node := "3AKCefhcrijSwwWM671ahhMrPVrE7Je3j4s"
-	// dataTransaction("188.166.93.92", nil, nil, nil)
-	// dataTransaction("3AQMExacaLKDXdWP8niVeyAe7Dw2vJdmNPy", nil, nil, nil)
-	// leaseCancel("9Gz3mK5WBW38gFLV4ysBC121yoTFw1DckNMU25XYCfHg")
+	// dataTransaction("174.138.13.8", nil, nil, nil)
+	// dataTransaction("3AD4PS3YWqXd3yQWi4xLBx23xSAFHRPBtpQ", nil, nil, nil)
+	// leaseCancel("8SwaR4AV8CEftq8vMnYiygzzbhAS4wtWTSzC5wG9E9eh")
 
 	m.Run("127.0.0.1", Port)
 }

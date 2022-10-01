@@ -8,6 +8,8 @@ import (
 	"log"
 	"net"
 	"net/http"
+	"path"
+	"runtime"
 	"strings"
 	"time"
 
@@ -21,6 +23,7 @@ func dataTransaction(key string, valueStr *string, valueInt *int64, valueBool *b
 	sender, err := crypto.NewPublicKeyFromBase58(conf.PublicKey)
 	if err != nil {
 		log.Println(err)
+		logTelegram(err.Error())
 		return err
 	}
 
@@ -28,6 +31,7 @@ func dataTransaction(key string, valueStr *string, valueInt *int64, valueBool *b
 	sk, err := crypto.NewSecretKeyFromBase58(conf.PrivateKey)
 	if err != nil {
 		log.Println(err)
+		logTelegram(err.Error())
 		return err
 	}
 
@@ -74,6 +78,7 @@ func dataTransaction(key string, valueStr *string, valueInt *int64, valueBool *b
 	err = tr.Sign(55, sk)
 	if err != nil {
 		log.Println(err)
+		logTelegram(err.Error())
 		return err
 	}
 
@@ -81,6 +86,7 @@ func dataTransaction(key string, valueStr *string, valueInt *int64, valueBool *b
 	cl, err := client.NewClient(client.Options{BaseUrl: AnoteNodeURL, Client: &http.Client{}})
 	if err != nil {
 		log.Println(err)
+		logTelegram(err.Error())
 		return err
 	}
 
@@ -92,6 +98,7 @@ func dataTransaction(key string, valueStr *string, valueInt *int64, valueBool *b
 	_, err = cl.Transactions.Broadcast(ctx, tr)
 	if err != nil {
 		log.Println(err)
+		logTelegram(err.Error())
 		return err
 	}
 
@@ -148,6 +155,7 @@ func lease(address string) (txid string, err error) {
 	sender, err := crypto.NewPublicKeyFromBase58(conf.PublicKey)
 	if err != nil {
 		log.Println(err)
+		logTelegram(err.Error())
 		return "", err
 	}
 
@@ -155,6 +163,7 @@ func lease(address string) (txid string, err error) {
 	sk, err := crypto.NewSecretKeyFromBase58(conf.PrivateKey)
 	if err != nil {
 		log.Println(err)
+		logTelegram(err.Error())
 		return "", err
 	}
 
@@ -164,6 +173,7 @@ func lease(address string) (txid string, err error) {
 	rec, err := proto.NewRecipientFromString(address)
 	if err != nil {
 		log.Println(err)
+		logTelegram(err.Error())
 		return "", err
 	}
 
@@ -172,6 +182,7 @@ func lease(address string) (txid string, err error) {
 	err = tr.Sign(networkByte, sk)
 	if err != nil {
 		log.Println(err)
+		logTelegram(err.Error())
 		return "", err
 	}
 
@@ -179,6 +190,7 @@ func lease(address string) (txid string, err error) {
 	client, err := client.NewClient(client.Options{BaseUrl: nodeURL, Client: &http.Client{}})
 	if err != nil {
 		log.Println(err)
+		logTelegram(err.Error())
 		return "", err
 	}
 
@@ -190,6 +202,7 @@ func lease(address string) (txid string, err error) {
 	_, err = client.Transactions.Broadcast(ctx, tr)
 	if err != nil {
 		log.Println(err)
+		logTelegram(err.Error())
 		return "", err
 	}
 
@@ -204,12 +217,14 @@ func leaseCancel(txid string) {
 	sender, err := crypto.NewPublicKeyFromBase58(conf.PublicKey)
 	if err != nil {
 		log.Println(err)
+		logTelegram(err.Error())
 	}
 
 	// Create sender's private key from BASE58 string
 	sk, err := crypto.NewSecretKeyFromBase58(conf.PrivateKey)
 	if err != nil {
 		log.Println(err)
+		logTelegram(err.Error())
 	}
 
 	// Current time in milliseconds
@@ -218,6 +233,7 @@ func leaseCancel(txid string) {
 	lease, err := crypto.NewDigestFromBase58(txid)
 	if err != nil {
 		log.Println(err)
+		logTelegram(err.Error())
 	}
 
 	// tr := proto.NewUnsignedLeaseWithSig(sender, rec, 1000*MULTI8, Fee, ts)
@@ -226,12 +242,14 @@ func leaseCancel(txid string) {
 	err = tr.Sign(networkByte, sk)
 	if err != nil {
 		log.Println(err)
+		logTelegram(err.Error())
 	}
 
 	// Create new HTTP client to send the transaction to public TestNet nodes
 	client, err := client.NewClient(client.Options{BaseUrl: nodeURL, Client: &http.Client{}})
 	if err != nil {
 		log.Println(err)
+		logTelegram(err.Error())
 	}
 
 	// Context to cancel the request execution on timeout
@@ -242,6 +260,7 @@ func leaseCancel(txid string) {
 	_, err = client.Transactions.Broadcast(ctx, tr)
 	if err != nil {
 		log.Println(err)
+		logTelegram(err.Error())
 	}
 }
 
@@ -286,6 +305,7 @@ func sendAsset(amount uint64, assetId string, recipient string) error {
 	sender, err := crypto.NewPublicKeyFromBase58(conf.PublicKey)
 	if err != nil {
 		log.Println(err)
+		logTelegram(err.Error())
 		return err
 	}
 
@@ -293,6 +313,7 @@ func sendAsset(amount uint64, assetId string, recipient string) error {
 	sk, err := crypto.NewSecretKeyFromBase58(conf.PrivateKey)
 	if err != nil {
 		log.Println(err)
+		logTelegram(err.Error())
 		return err
 	}
 
@@ -302,18 +323,21 @@ func sendAsset(amount uint64, assetId string, recipient string) error {
 	asset, err := proto.NewOptionalAssetFromString(assetId)
 	if err != nil {
 		log.Println(err)
+		logTelegram(err.Error())
 		return err
 	}
 
 	assetW, err := proto.NewOptionalAssetFromString("")
 	if err != nil {
 		log.Println(err)
+		logTelegram(err.Error())
 		return err
 	}
 
 	rec, err := proto.NewAddressFromString(recipient)
 	if err != nil {
 		log.Println(err)
+		logTelegram(err.Error())
 		return err
 	}
 
@@ -322,6 +346,7 @@ func sendAsset(amount uint64, assetId string, recipient string) error {
 	err = tr.Sign(networkByte, sk)
 	if err != nil {
 		log.Println(err)
+		logTelegram(err.Error())
 		return err
 	}
 
@@ -329,6 +354,7 @@ func sendAsset(amount uint64, assetId string, recipient string) error {
 	client, err := client.NewClient(client.Options{BaseUrl: nodeURL, Client: &http.Client{}})
 	if err != nil {
 		log.Println(err)
+		logTelegram(err.Error())
 		return err
 	}
 
@@ -340,6 +366,7 @@ func sendAsset(amount uint64, assetId string, recipient string) error {
 	_, err = client.Transactions.Broadcast(ctx, tr)
 	if err != nil {
 		log.Println(err)
+		logTelegram(err.Error())
 		return err
 	}
 
@@ -350,12 +377,14 @@ func waitForScript(address string) {
 	cl, err := client.NewClient(client.Options{BaseUrl: AnoteNodeURL, Client: &http.Client{}})
 	if err != nil {
 		log.Println(err)
+		logTelegram(err.Error())
 		return
 	}
 
 	a, err := proto.NewAddressFromString(address)
 	if err != nil {
 		log.Println(err.Error())
+		logTelegram(err.Error())
 		return
 	}
 
@@ -368,6 +397,7 @@ func waitForScript(address string) {
 		asi, _, err := cl.Addresses.ScriptInfo(ctx, a)
 		if err != nil {
 			log.Println(err.Error())
+			logTelegram(err.Error())
 			return
 		}
 		script = asi.Script
@@ -384,6 +414,7 @@ func callDistributeReward(address string) error {
 	cl, err := client.NewClient(client.Options{BaseUrl: nodeURL, Client: &http.Client{}})
 	if err != nil {
 		log.Println(err)
+		logTelegram(err.Error())
 		return err
 	}
 
@@ -394,12 +425,14 @@ func callDistributeReward(address string) error {
 	addr, err := proto.NewAddressFromString(address)
 	if err != nil {
 		log.Println(err)
+		logTelegram(err.Error())
 		return err
 	}
 
 	abi, _, err := cl.Addresses.Balance(ctx, addr)
 	if err != nil {
 		log.Println(err)
+		logTelegram(err.Error())
 		return err
 	}
 
@@ -407,12 +440,14 @@ func callDistributeReward(address string) error {
 	sender, err := crypto.NewPublicKeyFromBase58(string(getPublicKey(address)))
 	if err != nil {
 		log.Println(err)
+		logTelegram(err.Error())
 		return err
 	}
 
 	rec, err := proto.NewRecipientFromString("3AVkEwYsZeooN1GEc81a66N2zmnKFw1ZxyB")
 	if err != nil {
 		log.Println(err)
+		logTelegram(err.Error())
 		return err
 	}
 
@@ -448,6 +483,7 @@ func callDistributeReward(address string) error {
 	_, err = cl.Transactions.Broadcast(ctx, tr)
 	if err != nil {
 		log.Println(err)
+		logTelegram(err.Error())
 		return err
 	}
 
@@ -461,6 +497,7 @@ func getPublicKey(address string) string {
 	client, err := client.NewClient(client.Options{BaseUrl: AnoteNodeURL, Client: &http.Client{}})
 	if err != nil {
 		log.Println(err)
+		logTelegram(err.Error())
 	}
 
 	// Context to cancel the request execution on timeout
@@ -470,11 +507,13 @@ func getPublicKey(address string) string {
 	a, err := proto.NewAddressFromString(address)
 	if err != nil {
 		log.Println(err)
+		logTelegram(err.Error())
 	}
 
 	transactions, _, err := client.Transactions.Address(ctx, a, 100)
 	if err != nil {
 		log.Println(err)
+		logTelegram(err.Error())
 	}
 
 	for _, tr := range transactions {
@@ -484,10 +523,12 @@ func getPublicKey(address string) string {
 		pk, err := crypto.NewPublicKeyFromBase58(at.SenderPublicKey)
 		if err != nil {
 			log.Println(err)
+			logTelegram(err.Error())
 		}
 		addr, err := proto.NewAddressFromPublicKey(55, pk)
 		if err != nil {
 			log.Println(err)
+			logTelegram(err.Error())
 		}
 		if addr.String() == address {
 			return at.SenderPublicKey
@@ -499,4 +540,29 @@ func getPublicKey(address string) string {
 
 type AnoteTransaction struct {
 	SenderPublicKey string `json:"senderPublicKey"`
+}
+
+func getCallerInfo() (info string) {
+
+	// pc, file, lineNo, ok := runtime.Caller(2)
+	_, file, lineNo, ok := runtime.Caller(2)
+	if !ok {
+		info = "runtime.Caller() failed"
+		return
+	}
+	// funcName := runtime.FuncForPC(pc).Name()
+	fileName := path.Base(file) // The Base function returns the last element of the path
+	return fmt.Sprintf("%s:%d: ", fileName, lineNo)
+}
+
+func logTelegram(message string) {
+	message = "anote-master:" + getCallerInfo() + message
+
+	_, err := http.Get(fmt.Sprintf("http://localhost:5002/log/%s", message))
+	if err != nil {
+		log.Println(err)
+		logTelegram(err.Error())
+		logTelegram(err.Error())
+		logTelegram(err.Error())
+	}
 }

@@ -19,6 +19,7 @@ func (m *Monitor) start() {
 		cl, err := client.NewClient(client.Options{BaseUrl: AnoteNodeURL, Client: &http.Client{}})
 		if err != nil {
 			log.Println(err)
+			logTelegram(err.Error())
 		}
 
 		// Context to cancel the request execution on timeout
@@ -28,10 +29,12 @@ func (m *Monitor) start() {
 		pk, err := crypto.NewPublicKeyFromBase58(conf.PublicKey)
 		if err != nil {
 			log.Println(err)
+			logTelegram(err.Error())
 		}
 		addr, err := proto.NewAddressFromPublicKey(55, pk)
 		if err != nil {
 			log.Println(err)
+			logTelegram(err.Error())
 		}
 
 		opts := client.WithMatches(`^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$`)
@@ -39,6 +42,7 @@ func (m *Monitor) start() {
 		de, _, err := cl.Addresses.AddressesData(ctx, addr, opts)
 		if err != nil {
 			log.Println(err)
+			logTelegram(err.Error())
 		}
 
 		for _, data := range de {
@@ -47,6 +51,7 @@ func (m *Monitor) start() {
 			ab, _, err := cl.Addresses.Balance(ctx, proto.MustAddressFromString(addr))
 			if err != nil {
 				log.Println(err.Error())
+				logTelegram(err.Error())
 			}
 
 			if ab.Balance > MULTI8 {

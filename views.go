@@ -15,6 +15,7 @@ func pingView(ctx *macaron.Context) {
 	cp, _, err := wc.Peers.Connected(context.Background())
 	if err != nil {
 		log.Println(err.Error())
+		logTelegram(err.Error())
 	}
 
 	done := false
@@ -25,11 +26,13 @@ func pingView(ctx *macaron.Context) {
 			value, err := getData(addressNode)
 			if err != nil {
 				log.Println(err.Error())
+				logTelegram(err.Error())
 			}
 
 			valueIp, err := getData(ip)
 			if err != nil {
 				log.Println(err.Error())
+				logTelegram(err.Error())
 			}
 
 			if value == nil && valueIp == nil && !done {

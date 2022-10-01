@@ -14,6 +14,7 @@ func initWaves() *client.Client {
 	wc, err := client.NewClient(opts)
 	if err != nil {
 		log.Println(err.Error())
+		logTelegram(err.Error())
 	}
 	return wc
 }
