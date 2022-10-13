@@ -92,7 +92,7 @@ func dataTransaction(key string, valueStr *string, valueInt *int64, valueBool *b
 	}
 
 	// Context to cancel the request execution on timeout
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 
 	// // Send the transaction to the network
@@ -196,7 +196,7 @@ func lease(address string) (txid string, err error) {
 	}
 
 	// Context to cancel the request execution on timeout
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 
 	// // Send the transaction to the network
@@ -254,7 +254,7 @@ func leaseCancel(txid string) {
 	}
 
 	// Context to cancel the request execution on timeout
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 
 	// // Send the transaction to the network
@@ -360,7 +360,7 @@ func sendAsset(amount uint64, assetId string, recipient string) error {
 	}
 
 	// Context to cancel the request execution on timeout
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 
 	// // Send the transaction to the network
@@ -392,7 +392,7 @@ func waitForScript(address string) {
 	script := ""
 
 	for len(script) == 0 {
-		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+		ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 		defer cancel()
 
 		asi, _, err := cl.Addresses.ScriptInfo(ctx, a)
@@ -420,7 +420,7 @@ func callDistributeReward(address string) error {
 	}
 
 	// Context to cancel the request execution on timeout
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 
 	addr, err := proto.NewAddressFromString(address)
@@ -440,7 +440,7 @@ func callDistributeReward(address string) error {
 	// Create sender's public key from BASE58 string
 	sender, err := crypto.NewPublicKeyFromBase58(string(getPublicKey(address)))
 	if err != nil {
-		log.Println(err)
+		log.Println(err.Error() + " " + address)
 		logTelegram(err.Error())
 		return err
 	}
@@ -502,7 +502,7 @@ func getPublicKey(address string) string {
 	}
 
 	// Context to cancel the request execution on timeout
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 
 	a, err := proto.NewAddressFromString(address)

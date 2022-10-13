@@ -5,7 +5,7 @@ const (
 	MULTI8 = 100000000
 
 	// AnoteNodeURL is an URL for Anote Node
-	AnoteNodeURL = "https://nodes.aint.digital"
+	AnoteNodeURL = "https://nodes.anote.digital"
 
 	// WavesNodeURL is an URL for Waves Node
 	WavesNodeURL = "https://nodes.wavesnodes.com"

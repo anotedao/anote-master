@@ -21,7 +21,6 @@ func pingView(ctx *macaron.Context) {
 	done := false
 
 	for _, peer := range cp {
-		// for range cp {
 		if peer.Address.Addr.String() == ip {
 			value, err := getData(addressNode)
 			if err != nil {
