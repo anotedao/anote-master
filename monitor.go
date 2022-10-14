@@ -87,7 +87,6 @@ func (m *Monitor) start() {
 		leases, _, err := cl.Leasing.Active(ctx, CommunityAddress)
 		if err != nil {
 			log.Println(err.Error())
-			logTelegram(err.Error())
 		}
 
 		for _, lease := range leases {
@@ -111,7 +110,18 @@ func (m *Monitor) start() {
 			miner, err := getData(peer.Address.Addr.String())
 			ls := time.Unix(int64(peer.LastSeen)/1000, 0)
 			if err != nil && miner == nil && time.Since(ls) < time.Hour {
-				log.Println(peer.Address.Addr)
+				log.Println("Not in db: " + peer.Address.Addr.String())
+			} else if miner != nil && time.Since(ls) < time.Hour {
+				a, err := proto.NewAddressFromString(miner.(string))
+				if err != nil {
+					log.Println(err.Error())
+				}
+				leases, _, err := cl.Leasing.Active(ctx, a)
+				if err != nil {
+					log.Println(err.Error())
+				} else if len(leases) == 0 {
+					log.Println("No lease: " + miner.(string) + " " + peer.Address.Addr.String())
+				}
 			}
 		}
 
