@@ -17,7 +17,7 @@ const (
 	Port = 5000
 
 	// MonitorTick interval in seconds
-	MonitorTick = 10
+	MonitorTick = 60
 
 	// RewardFee is regular fee amount for sending mining rewards
 	RewardFee = 5 * Fee

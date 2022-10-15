@@ -57,6 +57,9 @@ func (m *Monitor) start() {
 		for _, data := range de {
 			addr := data.ToProtobuf().GetStringValue()
 
+			ctx, cancel := context.WithTimeout(context.Background(), 60*time.Second)
+			defer cancel()
+
 			ab, _, err := cl.Addresses.Balance(ctx, proto.MustAddressFromString(addr))
 			if err != nil {
 				log.Println(err.Error())
@@ -83,6 +86,9 @@ func (m *Monitor) start() {
 				logTelegram(data.ToProtobuf().GetStringValue() + " " + data.GetKey())
 			}
 		}
+
+		ctx, cancel = context.WithTimeout(context.Background(), 60*time.Second)
+		defer cancel()
 
 		leases, _, err := cl.Leasing.Active(ctx, CommunityAddress)
 		if err != nil {
@@ -116,6 +122,8 @@ func (m *Monitor) start() {
 				if err != nil {
 					log.Println(err.Error())
 				}
+				ctx, cancel := context.WithTimeout(context.Background(), 60*time.Second)
+				defer cancel()
 				leases, _, err := cl.Leasing.Active(ctx, a)
 				if err != nil {
 					log.Println(err.Error())
