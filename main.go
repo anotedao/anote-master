@@ -21,19 +21,19 @@ func main() {
 	conf = initConfig()
 
 	m = initMacaron()
-
 	wc = initWaves()
 
 	initMonitor()
 
-	// node := "3AKCefhcrijSwwWM671ahhMrPVrE7Je3j4s"
-	// dataTransaction("174.138.13.8", nil, nil, nil)
-	// dataTransaction("167.99.128.22", nil, nil, nil)
+	// node := "3AAJ2VBwKooTUkq2rSWxrZ3dcYBUBPJc3g8"
+	// owner := "3AKCefhcrijSwwWM671ahhMrPVrE7Je3j4s"
+	// dataTransaction(node, &owner, nil, nil)
+	// dataTransaction("188.166.64.136", nil, nil, nil)
 	// dataTransaction("3AQQcszuhC1QqEbRuycVw7sSZQaukexGk4K", nil, nil, nil)
-	// leaseCancel("6kLwsFyAfToRn95FGNjmcSCVV8Gck5Ez6iFCPG7cFFu1")
+	// leaseCancel("EGRBy86kpxm52qGhes2rqHppMXTMtgT3924UHupswhHU")
 	// a := "3AEDbSc69ZZ2ok3BqgTEvzQX7MjnmhZHjBM"
 	// b := "3ATqxdbGWSp1tKtPSkZ2pX52a1RWFjNrGZx"
-	// lease(a)
+	// lease(node)
 	// dataTransaction("165.227.141.41", &a, nil, nil)
 	// dataTransaction(a, &b, nil, nil)
 	// dataTransaction("46.101.146.126", nil, nil, nil)

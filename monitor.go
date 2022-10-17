@@ -115,9 +115,9 @@ func (m *Monitor) start() {
 		for _, peer := range peers {
 			miner, err := getData(peer.Address.Addr.String())
 			ls := time.Unix(int64(peer.LastSeen)/1000, 0)
-			if err != nil && miner == nil && time.Since(ls) < time.Hour {
-				log.Println("Not in db: " + peer.Address.Addr.String())
-			} else if miner != nil && time.Since(ls) < time.Hour {
+			if err != nil && miner == nil && time.Since(ls) < time.Hour && time.Since(ls) > 0 {
+				log.Println("Not in db: " + peer.Address.Addr.String() + " " + time.Since(ls).String())
+			} else if miner != nil && time.Since(ls) < time.Hour && time.Since(ls) > 0 {
 				a, err := proto.NewAddressFromString(miner.(string))
 				if err != nil {
 					log.Println(err.Error())
