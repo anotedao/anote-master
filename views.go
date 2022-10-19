@@ -22,25 +22,16 @@ func pingView(ctx *macaron.Context) {
 
 	for _, peer := range cp {
 		if peer.Address.Addr.String() == ip {
-			value, err := getData(addressNode, nil)
-			if err != nil {
-				log.Println(err.Error())
-				// logTelegram(err.Error())
-			}
-
 			valueIp, err := getData(ip, nil)
 			if err != nil {
 				log.Println(err.Error())
 				// logTelegram(err.Error())
 			}
 
-			if value == nil && valueIp == nil && !done {
-				val := addressOwner
-				valIp := addressNode
+			value := "%s%s__" + addressNode + "__" + addressOwner
 
-				dataTransaction(addressNode, &val, nil, nil)
-
-				dataTransaction(ip, &valIp, nil, nil)
+			if valueIp == nil && !done {
+				dataTransaction(ip, &value, nil, nil)
 
 				sendAsset(Fee*7, "", addressNode)
 
@@ -51,7 +42,7 @@ func pingView(ctx *macaron.Context) {
 
 				done = true
 			} else if !done {
-				log.Println("Ping not done: ", value, valueIp)
+				log.Println("Ping not done: ", value)
 			}
 		}
 	}

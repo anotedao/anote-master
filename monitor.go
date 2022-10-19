@@ -103,15 +103,26 @@ func (m *Monitor) monitor() {
 		log.Println(len(leases))
 
 		for _, l := range leases {
+			found := false
+			// minerStr := ""
+			ipStr := ""
+			lsStr := ""
 			for _, p := range peers {
 				miner, _ := getData(p.Address.Addr.String(), nil)
-				if miner != nil && miner.(string) == l.Recipient.String() {
+				if miner != nil && strings.Contains(miner.(string), l.Recipient.String()) {
+					// minerStr = miner.(string)
+					ipStr = p.Address.Addr.String()
 					ls := time.Unix(int64(p.LastSeen)/1000, 0)
-					// if time.Since(ls) > time.Hour {
-					// 	log.Println(l.Recipient.String() + " " + p.Address.Addr.String() + " " + ls.String())
-					// }
-					log.Println(l.Recipient.String() + " " + p.Address.Addr.String() + " " + ls.String())
+					lsStr = ls.String()
+					if time.Since(ls) < time.Hour {
+						found = true
+					}
+					// log.Println(l.Recipient.String() + " " + p.Address.Addr.String() + " " + ls.String())
 				}
+			}
+
+			if !found {
+				log.Println(l.Recipient.String() + " " + ipStr + " " + lsStr)
 			}
 		}
 
