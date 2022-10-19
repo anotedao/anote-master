@@ -16,14 +16,12 @@ type Monitor struct{}
 
 func (m *Monitor) start() {
 	for {
-		// Create new HTTP client to send the transaction to public TestNet nodes
 		cl, err := client.NewClient(client.Options{BaseUrl: AnoteNodeURL, Client: &http.Client{}, ApiKey: " "})
 		if err != nil {
 			log.Println(err)
 			logTelegram(err.Error())
 		}
 
-		// Context to cancel the request execution on timeout
 		ctx, cancel := context.WithTimeout(context.Background(), 60*time.Second)
 		defer cancel()
 
@@ -38,8 +36,6 @@ func (m *Monitor) start() {
 			logTelegram(err.Error())
 		}
 
-		CommunityAddress := addr
-
 		opts := client.WithMatches(`^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$`)
 
 		de, _, err := cl.Addresses.AddressesData(ctx, addr, opts)
@@ -48,14 +44,9 @@ func (m *Monitor) start() {
 			logTelegram(err.Error())
 		}
 
-		peers, _, err := cl.Peers.All(ctx)
-		if err != nil {
-			log.Println(err)
-			logTelegram(err.Error())
-		}
-
 		for _, data := range de {
 			addr := data.ToProtobuf().GetStringValue()
+			addr = strings.Split(addr, "__")[1]
 
 			ctx, cancel := context.WithTimeout(context.Background(), 60*time.Second)
 			defer cancel()
@@ -69,69 +60,62 @@ func (m *Monitor) start() {
 			if ab != nil && ab.Balance > MULTI8 {
 				callDistributeReward(addr)
 			}
-
-			found := false
-
-			for _, peer := range peers {
-				ls := time.Unix(int64(peer.LastSeen)/1000, 0)
-				if strings.Contains(peer.Address.String(), data.GetKey()) && time.Since(ls) < time.Hour*10 {
-					found = true
-				}
-			}
-
-			if !found {
-				dataTransaction(data.ToProtobuf().GetStringValue(), nil, nil, nil)
-				dataTransaction(data.GetKey(), nil, nil, nil)
-				log.Println(data.ToProtobuf().GetStringValue() + " " + data.GetKey())
-				logTelegram(data.ToProtobuf().GetStringValue() + " " + data.GetKey())
-			}
 		}
 
-		ctx, cancel = context.WithTimeout(context.Background(), 60*time.Second)
+		time.Sleep(time.Second * MonitorTick)
+	}
+}
+
+func (m *Monitor) monitor() {
+	for {
+		cl, err := client.NewClient(client.Options{BaseUrl: AnoteNodeURL, Client: &http.Client{}, ApiKey: " "})
+		if err != nil {
+			log.Println(err)
+			logTelegram(err.Error())
+		}
+
+		ctx, cancel := context.WithTimeout(context.Background(), 60*time.Second)
 		defer cancel()
 
-		leases, _, err := cl.Leasing.Active(ctx, CommunityAddress)
+		pk, err := crypto.NewPublicKeyFromBase58(conf.PublicKey)
+		if err != nil {
+			log.Println(err)
+			logTelegram(err.Error())
+		}
+		addr, err := proto.NewAddressFromPublicKey(55, pk)
+		if err != nil {
+			log.Println(err)
+			logTelegram(err.Error())
+		}
+
+		peers, _, err := cl.Peers.All(ctx)
+		if err != nil {
+			log.Println(err)
+			logTelegram(err.Error())
+		}
+
+		leases, _, err := cl.Leasing.Active(ctx, addr)
 		if err != nil {
 			log.Println(err.Error())
 		}
 
-		for _, lease := range leases {
-			found := false
-			for _, data := range de {
-				addr := data.ToProtobuf().GetStringValue()
-				if addr == lease.Recipient.String() {
-					found = true
-				}
-			}
-			if !found {
-				leaseCancel(lease.ID.String())
-				log.Println("Cancel lease: " + lease.Recipient.String())
-				logTelegram("Cancel lease: " + lease.Recipient.String())
-			}
-		}
-
+		log.Println(len(peers))
 		log.Println(len(leases))
 
-		for _, peer := range peers {
-			miner, err := getData(peer.Address.Addr.String())
-			ls := time.Unix(int64(peer.LastSeen)/1000, 0)
-			if err != nil && miner == nil && time.Since(ls) < time.Hour && time.Since(ls) > 0 {
-				log.Println("Not in db: " + peer.Address.Addr.String() + " " + time.Since(ls).String())
-			} else if miner != nil && time.Since(ls) < time.Hour && time.Since(ls) > 0 {
-				a, err := proto.NewAddressFromString(miner.(string))
-				if err != nil {
-					log.Println(err.Error())
-				}
-				ctx, cancel := context.WithTimeout(context.Background(), 60*time.Second)
-				defer cancel()
-				leases, _, err := cl.Leasing.Active(ctx, a)
-				if err != nil {
-					log.Println(err.Error())
-				} else if len(leases) == 0 {
-					log.Println("No lease: " + miner.(string) + " " + peer.Address.Addr.String())
+		for _, l := range leases {
+			for _, p := range peers {
+				miner, _ := getData(p.Address.Addr.String(), nil)
+				if miner != nil && miner.(string) == l.Recipient.String() {
+					ls := time.Unix(int64(p.LastSeen)/1000, 0)
+					// if time.Since(ls) > time.Hour {
+					// 	log.Println(l.Recipient.String() + " " + p.Address.Addr.String() + " " + ls.String())
+					// }
+					log.Println(l.Recipient.String() + " " + p.Address.Addr.String() + " " + ls.String())
 				}
 			}
 		}
+
+		log.Println("Done.")
 
 		time.Sleep(time.Second * MonitorTick)
 	}
@@ -140,4 +124,5 @@ func (m *Monitor) start() {
 func initMonitor() {
 	m := &Monitor{}
 	go m.start()
+	go m.monitor()
 }

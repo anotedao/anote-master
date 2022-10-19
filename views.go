@@ -22,13 +22,13 @@ func pingView(ctx *macaron.Context) {
 
 	for _, peer := range cp {
 		if peer.Address.Addr.String() == ip {
-			value, err := getData(addressNode)
+			value, err := getData(addressNode, nil)
 			if err != nil {
 				log.Println(err.Error())
 				// logTelegram(err.Error())
 			}
 
-			valueIp, err := getData(ip)
+			valueIp, err := getData(ip, nil)
 			if err != nil {
 				log.Println(err.Error())
 				// logTelegram(err.Error())
