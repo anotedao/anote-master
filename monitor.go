@@ -99,25 +99,32 @@ func (m *Monitor) monitor() {
 			log.Println(err.Error())
 		}
 
+		peersLoad := make(map[string]string)
+
+		for _, p := range peers {
+			miner, _ := getData(p.Address.Addr.String(), nil)
+			if miner != nil {
+				peersLoad[p.Address.Addr.String()] = miner.(string)
+			}
+		}
+
 		log.Println(len(peers))
+		log.Println(len(peersLoad))
 		log.Println(len(leases))
 
 		for _, l := range leases {
 			found := false
-			// minerStr := ""
 			ipStr := ""
 			lsStr := ""
 			for _, p := range peers {
-				miner, _ := getData(p.Address.Addr.String(), nil)
-				if miner != nil && strings.Contains(miner.(string), l.Recipient.String()) {
-					// minerStr = miner.(string)
+				miner, ok := peersLoad[p.Address.Addr.String()]
+				if ok && strings.Contains(miner, l.Recipient.String()) {
 					ipStr = p.Address.Addr.String()
 					ls := time.Unix(int64(p.LastSeen)/1000, 0)
 					lsStr = ls.String()
 					if time.Since(ls) < time.Hour {
 						found = true
 					}
-					// log.Println(l.Recipient.String() + " " + p.Address.Addr.String() + " " + ls.String())
 				}
 			}
 
