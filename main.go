@@ -20,11 +20,11 @@ func main() {
 
 	conf = initConfig()
 
-	// m = initMacaron()
+	m = initMacaron()
 
-	// wc = initWaves()
+	wc = initWaves()
 
-	// initMonitor()
+	initMonitor()
 
 	// cl, err := client.NewClient(client.Options{BaseUrl: AnoteNodeURL, Client: &http.Client{}, ApiKey: " "})
 	// if err != nil {
@@ -101,5 +101,7 @@ func main() {
 
 	// log.Println(prettyPrint(list))
 
-	// m.Run("127.0.0.1", Port)
+	m.Run("127.0.0.1", Port)
+
+	// lease("3AAV8552hNYiKrQ1TwUZohmdUeoouhPSXR6")
 }
