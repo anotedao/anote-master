@@ -25,8 +25,5 @@ func main() {
 	// val := "%s%s__3AEhZXKHYmQHgRGDbqJZxMBKjbCFWwqDery__3AD6JBzYKQYBYhcLGd9Z1XXxnTBoSEnjPj8"
 	// dataTransaction("167.99.135.70", &val, nil, nil)
 
-	// lease("3AFAnkpLvjVJAs6EfMC8vTT7qTVhR5a73VZ")
-	// leaseCancel("5fVp6qEXXJZdNww27Xxi8nK5hTQBaoWGc27o4JSmxnAD")
-
 	startMonitor()
 }
