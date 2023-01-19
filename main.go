@@ -22,8 +22,10 @@ func main() {
 
 	wc = initWaves()
 
-	// val := "%s%s__3AEhZXKHYmQHgRGDbqJZxMBKjbCFWwqDery__3AD6JBzYKQYBYhcLGd9Z1XXxnTBoSEnjPj8"
-	// dataTransaction("167.99.135.70", &val, nil, nil)
+	// val := "%s%s__3AGAMvupfs74c48CjdPeAzRXvz3jsonuuWo__3ATvsMDMGEjx59WyVTT8CsXsHXAatZi2Sfq"
+	// dataTransaction("193.149.180.83", &val, nil, nil)
+
+	// lease("3AGAMvupfs74c48CjdPeAzRXvz3jsonuuWo")
 
 	startMonitor()
 }
