@@ -23,9 +23,9 @@ func main() {
 	wc = initWaves()
 
 	// val := "%s%s__3AEN5EEf6B3bQztxuvcJmjQ1X58ncXsvb1V__3AEWfAjHgqF8vHrii7CnZokBXd3rxJKFyoY"
-	// dataTransaction("206.189.59.18", &val, nil, nil)
+	// dataTransaction("5.13.133.5", &val, nil, nil)
 
 	// lease("3AEN5EEf6B3bQztxuvcJmjQ1X58ncXsvb1V")
 
-	// startMonitor()
+	startMonitor()
 }
