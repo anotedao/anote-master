@@ -57,7 +57,7 @@ func (m *Monitor) start() {
 				logTelegram(err.Error())
 			}
 
-			if ab != nil && ab.Balance > (MULTI8+RewardFee) {
+			if ab != nil && ab.Balance >= MULTI8 {
 				callDistributeReward(addr)
 			}
 		}
