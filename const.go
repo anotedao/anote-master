@@ -20,5 +20,5 @@ const (
 	MonitorTick = 120
 
 	// RewardFee is regular fee amount for sending mining rewards
-	RewardFee = 5 * Fee
+	RewardFee = 10 * Fee
 )
