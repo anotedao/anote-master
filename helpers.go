@@ -474,7 +474,7 @@ func callDistributeReward(address string) error {
 
 	payments := proto.ScriptPayments{}
 	payments.Append(proto.ScriptPayment{
-		Amount: abi.Balance - RewardFee,
+		Amount: abi.Balance - 2*RewardFee,
 	})
 
 	fa := proto.OptionalAsset{}
