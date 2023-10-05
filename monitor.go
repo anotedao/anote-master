@@ -16,7 +16,14 @@ type Monitor struct{}
 
 func (m *Monitor) start() {
 	for {
-		cl, err := client.NewClient(client.Options{BaseUrl: AnoteNodeURL, Client: &http.Client{}, ApiKey: " "})
+		cl, err := client.NewClient(client.Options{BaseUrl: AnoteNodeURL, Client: &http.Client{
+			Transport: &http.Transport{
+				ForceAttemptHTTP2: true,
+				// MaxConnsPerHost:   -1,
+				MaxIdleConnsPerHost: -1,
+				DisableKeepAlives:   true,
+			},
+		}, ApiKey: " "})
 		if err != nil {
 			log.Println(err)
 			logTelegram(err.Error())
