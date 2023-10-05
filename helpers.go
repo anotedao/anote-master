@@ -574,8 +574,10 @@ func getCallerInfo() (info string) {
 func logTelegram(message string) {
 	message = "anote-master:" + getCallerInfo() + url.PathEscape(url.QueryEscape(message))
 
-	_, err := http.Get(fmt.Sprintf("http://localhost:5002/log/%s", message))
+	resp, err := http.Get(fmt.Sprintf("http://localhost:5002/log/%s", message))
 	if err != nil {
 		log.Println(err)
 	}
+
+	defer resp.Body.Close()
 }
