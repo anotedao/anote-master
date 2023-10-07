@@ -613,6 +613,8 @@ func getPublicKey(address string) string {
 		}
 	}
 
+	transactions = nil
+
 	return pk
 }
 
