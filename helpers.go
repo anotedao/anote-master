@@ -103,12 +103,13 @@ func dataTransaction(key string, valueStr *string, valueInt *int64, valueBool *b
 	defer cancel()
 
 	// // Send the transaction to the network
-	_, err = cl.Transactions.Broadcast(ctx, tr)
+	resp, err := cl.Transactions.Broadcast(ctx, tr)
 	if err != nil {
 		log.Println(err)
 		logTelegram(err.Error())
 		return err
 	}
+	defer resp.Body.Close()
 
 	return nil
 }
@@ -146,10 +147,11 @@ func getData(key string, address *string) (interface{}, error) {
 		}
 	}
 
-	ad, _, err := wc.Addresses.AddressesDataKey(context.Background(), a, key)
+	ad, resp, err := wc.Addresses.AddressesDataKey(context.Background(), a, key)
 	if err != nil {
 		return nil, err
 	}
+	defer resp.Body.Close()
 
 	if ad.GetValueType().String() == "string" {
 		return ad.ToProtobuf().GetStringValue(), nil
@@ -236,12 +238,13 @@ func lease(address string) (txid string, err error) {
 	defer cancel()
 
 	// // Send the transaction to the network
-	_, err = client.Transactions.Broadcast(ctx, tr)
+	resp, err := client.Transactions.Broadcast(ctx, tr)
 	if err != nil {
 		log.Println(err)
 		logTelegram(err.Error())
 		return "", err
 	}
+	defer resp.Body.Close()
 
 	return tr.ID.String(), nil
 }
@@ -301,11 +304,12 @@ func leaseCancel(txid string) {
 	defer cancel()
 
 	// // Send the transaction to the network
-	_, err = client.Transactions.Broadcast(ctx, tr)
+	resp, err := client.Transactions.Broadcast(ctx, tr)
 	if err != nil {
 		log.Println(err)
 		logTelegram(err.Error())
 	}
+	defer resp.Body.Close()
 }
 
 func getIP(r *http.Request) (string, error) {
@@ -414,12 +418,13 @@ func sendAsset(amount uint64, assetId string, recipient string) error {
 	defer cancel()
 
 	// // Send the transaction to the network
-	_, err = client.Transactions.Broadcast(ctx, tr)
+	resp, err := client.Transactions.Broadcast(ctx, tr)
 	if err != nil {
 		log.Println(err)
 		logTelegram(err.Error())
 		return err
 	}
+	defer resp.Body.Close()
 
 	return nil
 }
@@ -452,12 +457,13 @@ func waitForScript(address string) {
 		ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 		defer cancel()
 
-		asi, _, err := cl.Addresses.ScriptInfo(ctx, a)
+		asi, resp, err := cl.Addresses.ScriptInfo(ctx, a)
 		if err != nil {
 			log.Println(err.Error())
 			logTelegram(err.Error())
 			return
 		}
+		defer resp.Body.Close()
 		script = asi.Script
 
 		time.Sleep(time.Second * 2)
@@ -494,12 +500,13 @@ func callDistributeReward(address string) error {
 		return err
 	}
 
-	abi, _, err := cl.Addresses.Balance(ctx, addr)
+	abi, resp, err := cl.Addresses.Balance(ctx, addr)
 	if err != nil {
 		log.Println(err)
 		logTelegram(err.Error())
 		return err
 	}
+	defer resp.Body.Close()
 
 	// Create sender's public key from BASE58 string
 	sender, err := crypto.NewPublicKeyFromBase58(string(getPublicKey(address)))
@@ -545,12 +552,13 @@ func callDistributeReward(address string) error {
 	tr.Proofs = proto.NewProofs()
 
 	// // Send the transaction to the network
-	_, err = cl.Transactions.Broadcast(ctx, tr)
+	resp, err = cl.Transactions.Broadcast(ctx, tr)
 	if err != nil {
 		log.Println(err)
 		logTelegram(err.Error())
 		return err
 	}
+	defer resp.Body.Close()
 
 	return nil
 }
@@ -582,11 +590,12 @@ func getPublicKey(address string) string {
 		logTelegram(err.Error())
 	}
 
-	transactions, _, err := client.Transactions.Address(ctx, a, 100)
+	transactions, resp, err := client.Transactions.Address(ctx, a, 100)
 	if err != nil {
 		log.Println(err)
 		logTelegram(err.Error())
 	}
+	defer resp.Body.Close()
 
 	for _, tr := range transactions {
 		at := AnoteTransaction{}
