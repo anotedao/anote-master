@@ -71,6 +71,8 @@ func (m *Monitor) start() {
 			}
 		}
 
+		de = nil
+
 		time.Sleep(time.Second * MonitorTick)
 	}
 }
