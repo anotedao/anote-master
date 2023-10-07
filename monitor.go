@@ -45,11 +45,12 @@ func (m *Monitor) start() {
 
 		opts := client.WithMatches(`^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$`)
 
-		de, _, err := cl.Addresses.AddressesData(ctx, addr, opts)
+		de, resp, err := cl.Addresses.AddressesData(ctx, addr, opts)
 		if err != nil {
 			log.Println(err)
 			logTelegram(err.Error())
 		}
+		defer resp.Body.Close()
 
 		for _, data := range de {
 			addr := data.ToProtobuf().GetStringValue()
@@ -58,11 +59,12 @@ func (m *Monitor) start() {
 			ctx, cancel := context.WithTimeout(context.Background(), 60*time.Second)
 			defer cancel()
 
-			ab, _, err := cl.Addresses.Balance(ctx, proto.MustAddressFromString(addr))
+			ab, resp, err := cl.Addresses.Balance(ctx, proto.MustAddressFromString(addr))
 			if err != nil {
 				log.Println(err.Error())
 				logTelegram(err.Error())
 			}
+			defer resp.Body.Close()
 
 			if ab != nil && ab.Balance >= MULTI8 {
 				callDistributeReward(addr)
