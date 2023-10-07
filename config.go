@@ -15,6 +15,7 @@ type Config struct {
 // Load method loads configuration file to Config struct
 func (c *Config) load(configFile string) {
 	file, err := os.Open(configFile)
+	defer file.Close()
 
 	if err != nil {
 		log.Println(err)

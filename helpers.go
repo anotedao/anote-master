@@ -2,16 +2,13 @@ package main
 
 import (
 	"context"
-	"crypto/sha256"
 	"encoding/json"
 	"fmt"
 	"log"
-	"net"
 	"net/http"
 	"net/url"
 	"path"
 	"runtime"
-	"strings"
 	"time"
 
 	"github.com/wavesplatform/gowaves/pkg/client"
@@ -114,65 +111,65 @@ func dataTransaction(key string, valueStr *string, valueInt *int64, valueBool *b
 	return nil
 }
 
-func getData(key string, address *string) (interface{}, error) {
-	var a proto.WavesAddress
+// func getData(key string, address *string) (interface{}, error) {
+// 	var a proto.WavesAddress
 
-	wc, err := client.NewClient(client.Options{BaseUrl: AnoteNodeURL, Client: &http.Client{
-		Transport: &http.Transport{
-			ForceAttemptHTTP2: true,
-			// MaxConnsPerHost:   -1,
-			MaxIdleConnsPerHost: -1,
-			DisableKeepAlives:   true,
-		},
-	}})
-	if err != nil {
-		log.Println(err)
-		logTelegram(err.Error())
-	}
+// 	wc, err := client.NewClient(client.Options{BaseUrl: AnoteNodeURL, Client: &http.Client{
+// 		Transport: &http.Transport{
+// 			ForceAttemptHTTP2: true,
+// 			// MaxConnsPerHost:   -1,
+// 			MaxIdleConnsPerHost: -1,
+// 			DisableKeepAlives:   true,
+// 		},
+// 	}})
+// 	if err != nil {
+// 		log.Println(err)
+// 		logTelegram(err.Error())
+// 	}
 
-	if address == nil {
-		pk, err := crypto.NewPublicKeyFromBase58(conf.PublicKey)
-		if err != nil {
-			return nil, err
-		}
+// 	if address == nil {
+// 		pk, err := crypto.NewPublicKeyFromBase58(conf.PublicKey)
+// 		if err != nil {
+// 			return nil, err
+// 		}
 
-		a, err = proto.NewAddressFromPublicKey(55, pk)
-		if err != nil {
-			return nil, err
-		}
-	} else {
-		a, err = proto.NewAddressFromString(*address)
-		if err != nil {
-			return nil, err
-		}
-	}
+// 		a, err = proto.NewAddressFromPublicKey(55, pk)
+// 		if err != nil {
+// 			return nil, err
+// 		}
+// 	} else {
+// 		a, err = proto.NewAddressFromString(*address)
+// 		if err != nil {
+// 			return nil, err
+// 		}
+// 	}
 
-	ad, resp, err := wc.Addresses.AddressesDataKey(context.Background(), a, key)
-	if err != nil {
-		return nil, err
-	}
-	defer resp.Body.Close()
+// 	ad, resp, err := wc.Addresses.AddressesDataKey(context.Background(), a, key)
+// 	if err != nil {
+// 		return nil, err
+// 	}
+// 	defer resp.Body.Close()
 
-	if ad.GetValueType().String() == "string" {
-		return ad.ToProtobuf().GetStringValue(), nil
-	}
+// 	if ad.GetValueType().String() == "string" {
+// 		return ad.ToProtobuf().GetStringValue(), nil
+// 	}
 
-	if ad.GetValueType().String() == "boolean" {
-		return ad.ToProtobuf().GetBoolValue(), nil
-	}
+// 	if ad.GetValueType().String() == "boolean" {
+// 		return ad.ToProtobuf().GetBoolValue(), nil
+// 	}
 
-	if ad.GetValueType().String() == "integer" {
-		return ad.ToProtobuf().GetIntValue(), nil
-	}
+// 	if ad.GetValueType().String() == "integer" {
+// 		return ad.ToProtobuf().GetIntValue(), nil
+// 	}
 
-	return "", nil
-}
+// 	return "", nil
+// }
 
 // NewSHA256 ...
-func NewSHA256(data []byte) []byte {
-	hash := sha256.Sum256(data)
-	return hash[:]
-}
+// func NewSHA256(data []byte) []byte {
+// 	hash := sha256.Sum256(data)
+// 	return hash[:]
+// }
 
 func prettyPrint(i interface{}) string {
 	s, _ := json.MarshalIndent(i, "", "\t")
@@ -312,163 +309,163 @@ func leaseCancel(txid string) {
 	defer resp.Body.Close()
 }
 
-func getIP(r *http.Request) (string, error) {
-	//Get IP from the X-REAL-IP header
-	ip := r.Header.Get("X-REAL-IP")
-	netIP := net.ParseIP(ip)
-	if netIP != nil {
-		return ip, nil
-	}
+// func getIP(r *http.Request) (string, error) {
+// 	//Get IP from the X-REAL-IP header
+// 	ip := r.Header.Get("X-REAL-IP")
+// 	netIP := net.ParseIP(ip)
+// 	if netIP != nil {
+// 		return ip, nil
+// 	}
 
-	//Get IP from X-FORWARDED-FOR header
-	ips := r.Header.Get("X-FORWARDED-FOR")
-	splitIps := strings.Split(ips, ",")
-	for _, ip := range splitIps {
-		netIP := net.ParseIP(ip)
-		if netIP != nil {
-			return ip, nil
-		}
-	}
+// 	//Get IP from X-FORWARDED-FOR header
+// 	ips := r.Header.Get("X-FORWARDED-FOR")
+// 	splitIps := strings.Split(ips, ",")
+// 	for _, ip := range splitIps {
+// 		netIP := net.ParseIP(ip)
+// 		if netIP != nil {
+// 			return ip, nil
+// 		}
+// 	}
 
-	//Get IP from RemoteAddr
-	ip, _, err := net.SplitHostPort(r.RemoteAddr)
-	if err != nil {
-		return "", err
-	}
-	netIP = net.ParseIP(ip)
-	if netIP != nil {
-		return ip, nil
-	}
-	return "", fmt.Errorf("No valid ip found")
-}
+// 	//Get IP from RemoteAddr
+// 	ip, _, err := net.SplitHostPort(r.RemoteAddr)
+// 	if err != nil {
+// 		return "", err
+// 	}
+// 	netIP = net.ParseIP(ip)
+// 	if netIP != nil {
+// 		return ip, nil
+// 	}
+// 	return "", fmt.Errorf("No valid ip found")
+// }
 
-func sendAsset(amount uint64, assetId string, recipient string) error {
-	var networkByte byte
-	var nodeURL string
+// func sendAsset(amount uint64, assetId string, recipient string) error {
+// 	var networkByte byte
+// 	var nodeURL string
 
-	networkByte = 55
-	nodeURL = AnoteNodeURL
+// 	networkByte = 55
+// 	nodeURL = AnoteNodeURL
 
-	// Create sender's public key from BASE58 string
-	sender, err := crypto.NewPublicKeyFromBase58(conf.PublicKey)
-	if err != nil {
-		log.Println(err)
-		logTelegram(err.Error())
-		return err
-	}
+// 	// Create sender's public key from BASE58 string
+// 	sender, err := crypto.NewPublicKeyFromBase58(conf.PublicKey)
+// 	if err != nil {
+// 		log.Println(err)
+// 		logTelegram(err.Error())
+// 		return err
+// 	}
 
-	// Create sender's private key from BASE58 string
-	sk, err := crypto.NewSecretKeyFromBase58(conf.PrivateKey)
-	if err != nil {
-		log.Println(err)
-		logTelegram(err.Error())
-		return err
-	}
+// 	// Create sender's private key from BASE58 string
+// 	sk, err := crypto.NewSecretKeyFromBase58(conf.PrivateKey)
+// 	if err != nil {
+// 		log.Println(err)
+// 		logTelegram(err.Error())
+// 		return err
+// 	}
 
-	// Current time in milliseconds
-	ts := time.Now().Unix() * 1000
+// 	// Current time in milliseconds
+// 	ts := time.Now().Unix() * 1000
 
-	asset, err := proto.NewOptionalAssetFromString(assetId)
-	if err != nil {
-		log.Println(err)
-		logTelegram(err.Error())
-		return err
-	}
+// 	asset, err := proto.NewOptionalAssetFromString(assetId)
+// 	if err != nil {
+// 		log.Println(err)
+// 		logTelegram(err.Error())
+// 		return err
+// 	}
 
-	assetW, err := proto.NewOptionalAssetFromString("")
-	if err != nil {
-		log.Println(err)
-		logTelegram(err.Error())
-		return err
-	}
+// 	assetW, err := proto.NewOptionalAssetFromString("")
+// 	if err != nil {
+// 		log.Println(err)
+// 		logTelegram(err.Error())
+// 		return err
+// 	}
 
-	rec, err := proto.NewAddressFromString(recipient)
-	if err != nil {
-		log.Println(err)
-		logTelegram(err.Error())
-		return err
-	}
+// 	rec, err := proto.NewAddressFromString(recipient)
+// 	if err != nil {
+// 		log.Println(err)
+// 		logTelegram(err.Error())
+// 		return err
+// 	}
 
-	tr := proto.NewUnsignedTransferWithSig(sender, *asset, *assetW, uint64(ts), amount, Fee, proto.Recipient{Address: &rec}, nil)
+// 	tr := proto.NewUnsignedTransferWithSig(sender, *asset, *assetW, uint64(ts), amount, Fee, proto.Recipient{Address: &rec}, nil)
 
-	err = tr.Sign(networkByte, sk)
-	if err != nil {
-		log.Println(err)
-		logTelegram(err.Error())
-		return err
-	}
+// 	err = tr.Sign(networkByte, sk)
+// 	if err != nil {
+// 		log.Println(err)
+// 		logTelegram(err.Error())
+// 		return err
+// 	}
 
-	// Create new HTTP client to send the transaction to public TestNet nodes
-	client, err := client.NewClient(client.Options{BaseUrl: nodeURL, Client: &http.Client{
-		Transport: &http.Transport{
-			ForceAttemptHTTP2: true,
-			// MaxConnsPerHost:   -1,
-			MaxIdleConnsPerHost: -1,
-			DisableKeepAlives:   true,
-		},
-	}})
-	if err != nil {
-		log.Println(err)
-		logTelegram(err.Error())
-		return err
-	}
+// 	// Create new HTTP client to send the transaction to public TestNet nodes
+// 	client, err := client.NewClient(client.Options{BaseUrl: nodeURL, Client: &http.Client{
+// 		Transport: &http.Transport{
+// 			ForceAttemptHTTP2: true,
+// 			// MaxConnsPerHost:   -1,
+// 			MaxIdleConnsPerHost: -1,
+// 			DisableKeepAlives:   true,
+// 		},
+// 	}})
+// 	if err != nil {
+// 		log.Println(err)
+// 		logTelegram(err.Error())
+// 		return err
+// 	}
 
-	// Context to cancel the request execution on timeout
-	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
-	defer cancel()
+// 	// Context to cancel the request execution on timeout
+// 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+// 	defer cancel()
 
-	// // Send the transaction to the network
-	resp, err := client.Transactions.Broadcast(ctx, tr)
-	if err != nil {
-		log.Println(err)
-		logTelegram(err.Error())
-		return err
-	}
-	defer resp.Body.Close()
+// 	// // Send the transaction to the network
+// 	resp, err := client.Transactions.Broadcast(ctx, tr)
+// 	if err != nil {
+// 		log.Println(err)
+// 		logTelegram(err.Error())
+// 		return err
+// 	}
+// 	defer resp.Body.Close()
 
-	return nil
-}
+// 	return nil
+// }
 
-func waitForScript(address string) {
-	cl, err := client.NewClient(client.Options{BaseUrl: AnoteNodeURL, Client: &http.Client{
-		Transport: &http.Transport{
-			ForceAttemptHTTP2: true,
-			// MaxConnsPerHost:   -1,
-			MaxIdleConnsPerHost: -1,
-			DisableKeepAlives:   true,
-		},
-	}})
-	if err != nil {
-		log.Println(err)
-		logTelegram(err.Error())
-		return
-	}
+// func waitForScript(address string) {
+// 	cl, err := client.NewClient(client.Options{BaseUrl: AnoteNodeURL, Client: &http.Client{
+// 		Transport: &http.Transport{
+// 			ForceAttemptHTTP2: true,
+// 			// MaxConnsPerHost:   -1,
+// 			MaxIdleConnsPerHost: -1,
+// 			DisableKeepAlives:   true,
+// 		},
+// 	}})
+// 	if err != nil {
+// 		log.Println(err)
+// 		logTelegram(err.Error())
+// 		return
+// 	}
 
-	a, err := proto.NewAddressFromString(address)
-	if err != nil {
-		log.Println(err.Error())
-		logTelegram(err.Error())
-		return
-	}
+// 	a, err := proto.NewAddressFromString(address)
+// 	if err != nil {
+// 		log.Println(err.Error())
+// 		logTelegram(err.Error())
+// 		return
+// 	}
 
-	script := ""
+// 	script := ""
 
-	for len(script) == 0 {
-		ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
-		defer cancel()
+// 	for len(script) == 0 {
+// 		ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+// 		defer cancel()
 
-		asi, resp, err := cl.Addresses.ScriptInfo(ctx, a)
-		if err != nil {
-			log.Println(err.Error())
-			logTelegram(err.Error())
-			return
-		}
-		defer resp.Body.Close()
-		script = asi.Script
+// 		asi, resp, err := cl.Addresses.ScriptInfo(ctx, a)
+// 		if err != nil {
+// 			log.Println(err.Error())
+// 			logTelegram(err.Error())
+// 			return
+// 		}
+// 		defer resp.Body.Close()
+// 		script = asi.Script
 
-		time.Sleep(time.Second * 2)
-	}
-}
+// 		time.Sleep(time.Second * 2)
+// 	}
+// }
 
 func callDistributeReward(address string) error {
 	var networkByte = byte(55)

@@ -19,7 +19,7 @@ func main() {
 
 	conf = initConfig()
 
-	initWaves()
+	// initWaves()
 
 	// val := "%s%s__3AUYBormLLPHoxwjkiFYcDqWvvdzKwNinaU__3AA1ziNL6nYGrJr9hDw8KY5JKD15HQQzLbz"
 	// dataTransaction("161.35.146.50", &val, nil, nil)
