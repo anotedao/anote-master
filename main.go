@@ -28,5 +28,5 @@ func main() {
 
 	// leaseCancel("FF8tKf2dr3BQPCLw41StvRdU2dNhfeWMyJstNQdzASA1")
 
-	// startMonitor()
+	startMonitor()
 }
