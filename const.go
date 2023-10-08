@@ -7,14 +7,8 @@ const (
 	// AnoteNodeURL is an URL for Anote Node
 	AnoteNodeURL = "http://localhost:6869"
 
-	// WavesNodeURL is an URL for Waves Node
-	WavesNodeURL = "https://nodes.wavesplatform.com"
-
 	// Fee is regular fee amount
 	Fee = 100000
-
-	// Port represents a port the app will listen on
-	Port = 5000
 
 	// MonitorTick interval in seconds
 	MonitorTick = 30
