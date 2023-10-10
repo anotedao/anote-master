@@ -22,8 +22,9 @@ func (m *Monitor) start() {
 			logTelegram(err.Error())
 		}
 
-		ctx, cancel := context.WithTimeout(context.Background(), 60*time.Second)
-		defer cancel()
+		// ctx, cancel := context.WithTimeout(context.Background(), 60*time.Second)
+		ctx := context.Background()
+		// defer cancel()
 
 		pk, err := crypto.NewPublicKeyFromBase58(conf.PublicKey)
 		if err != nil {
@@ -49,8 +50,9 @@ func (m *Monitor) start() {
 			addr := data.ToProtobuf().GetStringValue()
 			addr = strings.Split(addr, "__")[1]
 
-			ctx, cancel := context.WithTimeout(context.Background(), 60*time.Second)
-			defer cancel()
+			// ctx, cancel := context.WithTimeout(context.Background(), 60*time.Second)
+			// defer cancel()
+			ctx := context.Background()
 
 			ab, resp, err := cl.Addresses.Balance(ctx, proto.MustAddressFromString(addr))
 			if err != nil {
