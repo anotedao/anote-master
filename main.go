@@ -22,7 +22,7 @@ func main() {
 	// initWaves()
 
 	// val := "%s%s__3AVEnVqk9RpNj89Kbid1o68mXw4rR3SrsKw__3AEBPBgPx59KfgjyFvhS6mR6APSPfae38J6"
-	// dataTransaction("161.35.146.50", &val, nil, nil)
+	// dataTransaction("68.233.106.218", &val, nil, nil)
 
 	// lease("3AVEnVqk9RpNj89Kbid1o68mXw4rR3SrsKw")
 
