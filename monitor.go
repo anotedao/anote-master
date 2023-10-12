@@ -15,13 +15,13 @@ import (
 type Monitor struct{}
 
 func (m *Monitor) start() {
-	for {
-		cl, err := client.NewClient(client.Options{BaseUrl: AnoteNodeURL, Client: &http.Client{}, ApiKey: " "})
-		if err != nil {
-			log.Println(err)
-			logTelegram(err.Error())
-		}
+	cl, err := client.NewClient(client.Options{BaseUrl: AnoteNodeURL, Client: &http.Client{}, ApiKey: " "})
+	if err != nil {
+		log.Println(err)
+		logTelegram(err.Error())
+	}
 
+	for {
 		// ctx, cancel := context.WithTimeout(context.Background(), 60*time.Second)
 		ctx := context.Background()
 		// defer cancel()
@@ -64,9 +64,12 @@ func (m *Monitor) start() {
 			if ab != nil && ab.Balance >= MULTI8 {
 				callDistributeReward(addr)
 			}
+
+			ctx = nil
 		}
 
 		de = nil
+		ctx = nil
 
 		time.Sleep(time.Second * MonitorTick)
 	}
