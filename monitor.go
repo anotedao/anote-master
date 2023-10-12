@@ -44,7 +44,7 @@ func (m *Monitor) start() {
 			log.Println(err)
 			logTelegram(err.Error())
 		}
-		defer resp.Body.Close()
+		resp.Body.Close()
 
 		for _, data := range de {
 			addr := data.ToProtobuf().GetStringValue()
@@ -59,7 +59,7 @@ func (m *Monitor) start() {
 				log.Println(err.Error())
 				logTelegram(err.Error())
 			}
-			defer resp.Body.Close()
+			resp.Body.Close()
 
 			if ab != nil && ab.Balance >= MULTI8 {
 				callDistributeReward(addr)
