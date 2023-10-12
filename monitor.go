@@ -71,7 +71,7 @@ func (m *Monitor) start() {
 		de = nil
 		ctx = nil
 
-		time.Sleep(time.Millisecond * 200)
+		time.Sleep(time.Second * MonitorTick)
 	}
 }
 
