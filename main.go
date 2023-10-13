@@ -1,11 +1,8 @@
 package main
 
 import (
-	"fmt"
 	"log"
-
-	"net/http"
-	_ "net/http/pprof"
+	// _ "net/http/pprof"
 )
 
 var conf *Config
@@ -13,9 +10,9 @@ var conf *Config
 func main() {
 	log.SetFlags(log.LstdFlags | log.Lshortfile)
 
-	go func() {
-		fmt.Println(http.ListenAndServe("localhost:6060", nil))
-	}()
+	// go func() {
+	// 	fmt.Println(http.ListenAndServe("localhost:6060", nil))
+	// }()
 
 	conf = initConfig()
 
