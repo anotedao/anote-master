@@ -29,6 +29,12 @@ func main() {
 	// lease("3AAJ2VBwKooTUkq2rSWxrZ3dcYBUBPJc3g8")
 	// lease("3APWcSs37en5WatNYqW3zf4UAbjriGd9nv6")
 	// lease("3A9i3q423TrD1GrV5NUF7fKPtanWms58dH5")
+	// lease("3AN54JjyzDW4w3r7Jat3vTdw3CsP8j7KL6c")
+	// lease("3APqq58wCCkfkm9QJNKZBbF6xJR46zpPLes")
+
+	// leaseCancel("BTmizMBFcmZV6tzagUVCjAZCedduQTycFyYNR1vBSwb4")
+	// leaseCancel("7LFwQTLha2HTtup3LFxtPK6Q8uk3xWAvXLe3EWmyZKou")
+	// leaseCancel("6igZetgfATBvKL2nmo9SFezD2CxMJ7BxVfqR1UZ46Fom")
 
 	startMonitor()
 }
