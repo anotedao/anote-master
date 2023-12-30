@@ -26,5 +26,8 @@ func main() {
 	// leaseCancel("H6Ks1kQVQWBgoCEYRHg5S9zQLBPcSfGmz2TaJTm2Zucm")
 	// leaseCancel("GDicpYUefUenvUY3NDP6zMD3zDz7uyef2doeecjHzBHM")
 
+	// lease("3AAJ2VBwKooTUkq2rSWxrZ3dcYBUBPJc3g8")
+	// lease("3APWcSs37en5WatNYqW3zf4UAbjriGd9nv6")
+
 	startMonitor()
 }
