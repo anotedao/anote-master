@@ -199,7 +199,7 @@ func lease(address string) (txid string, err error) {
 		return "", err
 	}
 
-	tr := proto.NewUnsignedLeaseWithSig(sender, rec, 64000*MULTI8, Fee, ts)
+	tr := proto.NewUnsignedLeaseWithSig(sender, rec, 43000*MULTI8, Fee, ts)
 
 	err = tr.Sign(networkByte, sk)
 	if err != nil {
