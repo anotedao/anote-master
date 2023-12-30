@@ -18,10 +18,10 @@ func main() {
 
 	// initWaves()
 
-	// val := "%s%s__3A9i3q423TrD1GrV5NUF7fKPtanWms58dH5__3AEvVZB8ecyLkYZt8QFoPxy5q1zKoQoifJP"
-	// dataTransaction("165.22.90.138", &val, nil, nil)
+	// val := "%s%s__3AJJjHbfw9MtY58HFi8oi1ajhGbWeKAgMKb__3AA5c4VhSjmE8C9eV1fezMdVE2yzujpBVV6"
+	// dataTransaction("188.25.72.100", &val, nil, nil)
 
-	// lease("3A9i3q423TrD1GrV5NUF7fKPtanWms58dH5")
+	// lease("3AJJjHbfw9MtY58HFi8oi1ajhGbWeKAgMKb")
 
 	// leaseCancel("H6Ks1kQVQWBgoCEYRHg5S9zQLBPcSfGmz2TaJTm2Zucm")
 	// leaseCancel("GDicpYUefUenvUY3NDP6zMD3zDz7uyef2doeecjHzBHM")
