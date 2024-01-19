@@ -4,7 +4,6 @@ import (
 	"context"
 	"log"
 	"net/http"
-	"strings"
 	"time"
 
 	"github.com/wavesplatform/gowaves/pkg/client"
@@ -47,8 +46,9 @@ func (m *Monitor) start() {
 		resp.Body.Close()
 
 		for _, data := range de {
-			addr := data.ToProtobuf().GetStringValue()
-			addr = strings.Split(addr, "__")[1]
+			addr := data.GetKey()
+			// addr := data.ToProtobuf().GetStringValue()
+			// addr = strings.Split(addr, "__")[1]
 
 			// ctx, cancel := context.WithTimeout(context.Background(), 60*time.Second)
 			// defer cancel()
