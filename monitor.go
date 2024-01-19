@@ -45,6 +45,8 @@ func (m *Monitor) start() {
 		}
 		resp.Body.Close()
 
+		log.Println(prettyPrint(de))
+
 		for _, data := range de {
 			addr := data.GetKey()
 			// addr := data.ToProtobuf().GetStringValue()
