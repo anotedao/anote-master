@@ -54,6 +54,8 @@ func (m *Monitor) start() {
 			// defer cancel()
 			ctx := context.Background()
 
+			log.Println(addr)
+
 			ab, resp, err := cl.Addresses.Balance(ctx, proto.MustAddressFromString(addr))
 			if err != nil {
 				log.Println(err.Error())
