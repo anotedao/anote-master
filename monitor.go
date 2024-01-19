@@ -36,14 +36,16 @@ func (m *Monitor) start() {
 			logTelegram(err.Error())
 		}
 
-		opts := client.WithMatches(`^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$`)
+		// opts := client.WithMatches(`^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$`)
 
-		de, resp, err := cl.Addresses.AddressesData(ctx, addr, opts)
+		de, resp, err := cl.Addresses.AddressesData(ctx, addr)
 		if err != nil {
 			log.Println(err)
 			logTelegram(err.Error())
 		}
 		resp.Body.Close()
+
+		log.Println(addr)
 
 		log.Println(prettyPrint(de))
 
