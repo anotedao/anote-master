@@ -606,6 +606,7 @@ func logTelegram(message string) {
 	resp, err := http.Get(fmt.Sprintf("http://localhost:5002/log/%s", message))
 	if err != nil {
 		log.Println(err)
+		return
 	}
 
 	defer resp.Body.Close()

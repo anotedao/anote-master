@@ -67,7 +67,7 @@ func (m *Monitor) start() {
 			}
 			resp.Body.Close()
 
-			if ab != nil && ab.Balance >= MULTI8 {
+			if ab != nil && ab.Balance >= (MULTI8+Fee) {
 				callDistributeReward(addr)
 			}
 
